@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChirpX – اپنی آواز بلند کریں</title>
+
+  <!-- External CSS – style.css -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ================================================
+     ChirpX – Twitter Clone
+     index.html – Sirf HTML Structure Yahan Hai
+     CSS  → style.css
+     JS   → app.js
+     ================================================ -->
+
+<div class="app">
+
+  <!-- ======== SIDEBAR (Left Navigation) ======== -->
+  <aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="logo">
+      <div class="logo-icon">✦</div>
+      <span class="logo-text">ChirpX</span>
+    </div>
+
+    <!-- Nav Links -->
+    <a class="nav-item active" onclick="switchTab()">
+      <span class="icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a class="nav-item" onclick="switchTab(); showToast('🔍 Explore jald aa raha hai!')">
+      <span class="icon">🔍</span>
+      <span>Explore</span>
+    </a>
+    <a class="nav-item" onclick="switchTab(); showToast('🔔 3 nayi notifications hain!')">
+      <span class="icon">🔔</span>
+      <span>Notifications</span>
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" onclick="switchTab(); showToast('📩 Messages jald aa rahe hain!')">
+      <span class="icon">✉️</span>
+      <span>Messages</span>
+    </a>
+    <a class="nav-item" onclick="switchTab(); showToast('🔖 Bookmarks saved!')">
+      <span class="icon">🔖</span>
+      <span>Bookmarks</span>
+    </a>
+    <a class="nav-item" onclick="switchTab(); showToast('👤 Profile khul raha hai...')">
+      <span class="icon">👤</span>
+      <span>Profile</span>
+    </a>
+
+    <!-- Post Button -->
+    <button class="post-btn" onclick="openModal()">Chirp کریں ✦</button>
+
+    <!-- Current User -->
+    <div class="sidebar-user" onclick="showToast('⚙️ Settings jald aa rahi hain!')">
+      <div class="avatar online">آپ</div>
+      <div class="user-info">
+        <h4>آپ کا نام</h4>
+        <span>@aap_ka_handle</span>
+      </div>
+      <span style="color:var(--muted); margin-left:auto; font-size:0.9rem">⋯</span>
+    </div>
+
+  </aside>
+  <!-- /SIDEBAR -->
+
+
+  <!-- ======== MAIN FEED (Center) ======== -->
+  <main class="feed" id="feed">
+
+    <!-- Feed Header / Tabs -->
+    <div class="feed-header">
+      <div class="feed-tabs">
+        <div class="feed-tab active" onclick="switchFeedTab('for-you', this)">آپ کے لیے</div>
+        <div class="feed-tab"       onclick="switchFeedTab('following', this)">Following</div>
+        <div class="feed-tab"       onclick="switchFeedTab('trending', this)">Trending</div>
+      </div>
+    </div>
+
+    <!-- Compose Box (inline) -->
+    <div class="compose-box">
+      <div class="avatar online" style="margin-top:4px">آپ</div>
+      <div class="compose-area">
+        <textarea
+          class="compose-input"
+          id="mainCompose"
+          placeholder="کیا ہو رہا ہے؟ اپنی بات کریں..."
+          rows="3"
+          oninput="updateCharCount(this, 'mainCount')"
+        ></textarea>
+        <div class="compose-footer">
+          <div class="compose-actions">
+            <button class="compose-action-btn" title="Image">🖼️</button>
+            <button class="compose-action-btn" title="GIF">🎬</button>
+            <button class="compose-action-btn" title="Poll">📊</button>
+            <button class="compose-action-btn" title="Emoji">😊</button>
+          </div>
+          <span class="char-count" id="mainCount">280</span>
+          <button class="chirp-btn" onclick="postTweet('mainCompose')">Chirp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tweet Feed – JS se render hoga -->
+    <div id="tweetFeed"></div>
+
+  </main>
+  <!-- /MAIN FEED -->
+
+
+  <!-- ======== RIGHT PANEL (Trending & Suggestions) ======== -->
+  <aside class="right-panel">
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="ChirpX پر تلاش کریں..."
+        oninput="filterTrends(this.value)"
+      />
+    </div>
+
+    <!-- Trending Topics -->
+    <div class="panel-card">
+      <div class="panel-title">📈 ٹرینڈنگ</div>
+      <div id="trendsList">
+
+        <div class="trend-item" onclick="searchTrend('#پاکستان')">
+          <div class="trend-cat">پاکستان · Trending</div>
+          <div class="trend-tag">#پاکستان</div>
+          <div class="trend-count">48.2K Chirps</div>
+        </div>
+
+        <div class="trend-item" onclick="searchTrend('#ٹیکنالوجی')">
+          <div class="trend-cat">Tech · Trending</div>
+          <div class="trend-tag">#ٹیکنالوجی</div>
+          <div class="trend-count">31.7K Chirps</div>
+        </div>
+
+        <div class="trend-item" onclick="searchTrend('#کرکٹ')">
+          <div class="trend-cat">Sports · Trending</div>
+          <div class="trend-tag">#کرکٹ</div>
+          <div class="trend-count">22.1K Chirps</div>
+        </div>
+
+        <div class="trend-item" onclick="searchTrend('#اردو')">
+          <div class="trend-cat">Language · Trending</div>
+          <div class="trend-tag">#اردو</div>
+          <div class="trend-count">15.4K Chirps</div>
+        </div>
+
+        <div class="trend-item" onclick="searchTrend('#موسم')">
+          <div class="trend-cat">Weather · Trending</div>
+          <div class="trend-tag">#موسم</div>
+          <div class="trend-count">8.9K Chirps</div>
+        </div>
+
+      </div>
+    </div>
+    <!-- /Trending -->
+
+    <!-- Who to Follow -->
+    <div class="panel-card">
+      <div class="panel-title">👥 Follow کریں</div>
+      <div id="followList">
+
+        <div class="follow-item">
+          <div class="avatar sm blue">عA</div>
+          <div class="follow-info">
+            <div class="follow-name">عمر احمد ✦</div>
+            <div class="follow-handle">@umar_ahmed</div>
+          </div>
+          <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <div class="follow-item">
+          <div class="avatar sm green">فZ</div>
+          <div class="follow-info">
+            <div class="follow-name">فاطمہ زہرا</div>
+            <div class="follow-handle">@fatima_z</div>
+          </div>
+          <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <div class="follow-item">
+          <div class="avatar sm orange">بK</div>
+          <div class="follow-info">
+            <div class="follow-name">بلال خان</div>
+            <div class="follow-handle">@bilal_khan</div>
+          </div>
+          <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <div class="follow-item">
+          <div class="avatar sm red">سR</div>
+          <div class="follow-info">
+            <div class="follow-name">سارہ رضا</div>
+            <div class="follow-handle">@sarah_raza</div>
+          </div>
+          <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+      </div>
+    </div>
+    <!-- /Who to Follow -->
+
+  </aside>
+  <!-- /RIGHT PANEL -->
+
+</div>
+<!-- /app -->
+
+
+<!-- ======== COMPOSE MODAL ======== -->
+<div class="modal-overlay" id="composeModal" onclick="closeModalOnBg(event)">
+  <div class="modal">
+
+    <div class="modal-header">
+      <div class="logo" style="font-size:1.3rem; margin:0;">
+        <div class="logo-icon" style="width:32px; height:32px; font-size:0.9rem;">✦</div>
+        <span style="font-family:'Instrument Serif',serif; font-style:italic; color:var(--accent)">ChirpX</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-compose">
+      <div class="avatar online" style="margin-top:4px">آپ</div>
+      <textarea
+        class="modal-textarea"
+        id="modalCompose"
+        placeholder="کیا ہو رہا ہے؟ آپ کی بات سننی ہے..."
+        oninput="updateCharCount(this, 'modalCount')"
+      ></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <div class="compose-actions">
+        <button class="compose-action-btn">🖼️</button>
+        <button class="compose-action-btn">🎬</button>
+        <button class="compose-action-btn">😊</button>
+      </div>
+      <span class="char-count" id="modalCount">280</span>
+      <button class="chirp-btn" onclick="postTweet('modalCompose', true)">Chirp کریں</button>
+    </div>
+
+  </div>
+</div>
+<!-- /MODAL -->
+
+
+<!-- ======== TOAST NOTIFICATION ======== -->
+<div class="toast" id="toast">
+  <span id="toastMsg">✓ کامیاب!</span>
+</div>
+
+
+<!-- External JS – app.js (defer so DOM loads first) -->
+<script src="app.js" defer></script>
+
+</body>
+</html>
